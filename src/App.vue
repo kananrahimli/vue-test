@@ -218,7 +218,7 @@ export default {
           order.amount == this.orderAmount ||
           order.product[0].name
             .toLowerCase()
-            .includes(this.productName.toLowerCase())
+            .includes(this.productName?.toLowerCase())
         );
       });
       // console.log(this.filteredOrder);
