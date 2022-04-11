@@ -10,7 +10,7 @@ export default new Vuex.Store({
  
   mutations: {
     setOrders(state,payload){
-      console.log(payload);
+      
       state.orders=payload
     }
   },
@@ -18,10 +18,10 @@ export default new Vuex.Store({
     getOrders(context){
        return axios.get('https://assignment-6fdaf-default-rtdb.firebaseio.com/orders.json').then(res=>{
 
-       const currentOrders=res.data.map(order=>{
+       let currentOrders=res.data.map(order=>{
          return {...order,date:order.date.substr(0, 10)}
        })
-        
+      
         context.commit('setOrders',currentOrders)
        })
 
