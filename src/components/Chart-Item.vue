@@ -2,8 +2,8 @@
   <div>
     <div class="text-left">
       <h1>Statistika (son 1 ay)</h1>
-      <h5>Ən çox satılan məhsul:Lg tv</h5>
-      <h5>Ən çox sifariş olunan gün : 2022.04.02</h5>
+      <h5>Ən çox satılan məhsul: {{ mostFrequent.product[0].name}}</h5>
+      <h5>Ən çox sifariş olunan gün : {{theMostItems.date}}</h5>
     </div>
 
     <LineChartGenerator
@@ -109,6 +109,12 @@ export default {
           }
         ]
       }
+    },
+    theMostItems(){
+      return this.chartDates.findTheMost
+    },
+    mostFrequent(){
+      return this.chartDates.mostFrequent
     }
     
   },
@@ -131,7 +137,7 @@ export default {
  
  created(){
    setTimeout(() => {
-     console.log(this.chartDates);
+     console.log(this.theMostItems);
    }, 1000);
  }
   

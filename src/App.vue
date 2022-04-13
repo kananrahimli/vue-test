@@ -105,6 +105,9 @@ export default {
     chartDates() {
       let dates = [];
       let orders = [];
+      let groupArrays = null;
+      let mostFrequent = null;
+      let arr = null;
 
       if (this.filteredOrder.length > 0) {
         const groups = this.filteredOrder.reduce((groups, order) => {
@@ -117,7 +120,7 @@ export default {
         }, {});
 
         // Edit: to add it in the array format instead
-        const groupArrays = Object.keys(groups).map((date) => {
+        groupArrays = Object.keys(groups).map((date) => {
           return {
             date,
             orders: groups[date],
@@ -129,9 +132,14 @@ export default {
           let amounts = group.orders.reduce((total, current) => {
             return total + current.amount;
           }, 0);
-      
+
           orders.push(amounts);
         });
+
+        arr = this.filteredOrder;
+
+        mostFrequent = arr.sort((a, b) => a.amount - b.amount)[arr.length - 1];
+
       } else {
         const groups = this.orders.reduce((groups, order) => {
           const date = order.date;
@@ -143,24 +151,37 @@ export default {
         }, {});
 
         // Edit: to add it in the array format instead
-        const groupArrays = Object.keys(groups).map((date) => {
+        groupArrays = Object.keys(groups).map((date) => {
           return {
             date,
             orders: groups[date],
           };
         });
+        console.log(groupArrays);
 
         groupArrays.forEach((group) => {
           dates.push(group.date);
           let amounts = group.orders.reduce((total, current) => {
             return total + current.amount;
           }, 0);
-      
+
           orders.push(amounts);
         });
-      }
 
-      return { dates: [...dates], orders: [...orders] };
+        arr = this.orders;
+
+        mostFrequent = arr.sort((a, b) => a.amount - b.amount)[arr.length - 1];
+      }
+      let findTheMost = groupArrays.sort(
+        (a, b) => b.orders.length - a.orders.length
+      )[0];
+
+      return {
+        dates: [...dates],
+        orders: [...orders],
+        findTheMost,
+        mostFrequent,
+      };
     },
   },
   methods: {
@@ -177,7 +198,6 @@ export default {
             .includes(this.productName?.toLowerCase())
         );
       });
-      // console.log(this.filteredOrder);
     },
   },
   created() {
