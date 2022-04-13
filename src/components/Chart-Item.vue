@@ -81,7 +81,7 @@ export default {
       default: () => []
     },
     chartDates:{
-      type:Array
+      type:Object
     },
     allOrders:{
       type:Array
@@ -100,12 +100,12 @@ export default {
     },
     chartData(){
       return  {
-        labels: this.chartDates,
+        labels: this.chartDates.dates,
         datasets: [
           {
             label: 'Satış sayı',
             backgroundColor: '#f87979',
-            data: [10,18,2,6,14]
+            data: this.chartDates.orders
           }
         ]
       }
@@ -129,6 +129,11 @@ export default {
 
   },
  
+ created(){
+   setTimeout(() => {
+     console.log(this.chartDates);
+   }, 1000);
+ }
   
 };
 </script>

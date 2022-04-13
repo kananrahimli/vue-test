@@ -104,19 +104,63 @@ export default {
 
     chartDates() {
       let dates = [];
+      let orders = [];
 
       if (this.filteredOrder.length > 0) {
-        this.filteredOrder.forEach((order) => {
-          dates.push(order.date);
+        const groups = this.filteredOrder.reduce((groups, order) => {
+          const date = order.date;
+          if (!groups[date]) {
+            groups[date] = [];
+          }
+          groups[date].push(order);
+          return groups;
+        }, {});
+
+        // Edit: to add it in the array format instead
+        const groupArrays = Object.keys(groups).map((date) => {
+          return {
+            date,
+            orders: groups[date],
+          };
+        });
+
+        groupArrays.forEach((group) => {
+          dates.push(group.date);
+          let amounts = group.orders.reduce((total, current) => {
+            return total + current.amount;
+          }, 0);
+      
+          orders.push(amounts);
         });
       } else {
-        this.orders.forEach((order) => {
-          dates.push(order.date);
+        const groups = this.orders.reduce((groups, order) => {
+          const date = order.date;
+          if (!groups[date]) {
+            groups[date] = [];
+          }
+          groups[date].push(order);
+          return groups;
+        }, {});
+
+        // Edit: to add it in the array format instead
+        const groupArrays = Object.keys(groups).map((date) => {
+          return {
+            date,
+            orders: groups[date],
+          };
+        });
+
+        groupArrays.forEach((group) => {
+          dates.push(group.date);
+          let amounts = group.orders.reduce((total, current) => {
+            return total + current.amount;
+          }, 0);
+      
+          orders.push(amounts);
         });
       }
-      dates = new Set(dates);
 
-      return [...dates];
+      return { dates: [...dates], orders: [...orders] };
     },
   },
   methods: {
@@ -137,7 +181,9 @@ export default {
     },
   },
   created() {
-    this.getOrders()
+    this.getOrders().then(() => {
+      console.log(this.orders);
+    });
   },
 };
 </script>
